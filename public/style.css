@@ -1,0 +1,47 @@
+a {
+	text-decoration: none;
+}
+
+body {
+	background-color: rgb(74, 42, 3);
+}
+
+.container {
+	width: 80%;
+	height: 80%;
+	background-color: rgb(255, 229, 180);
+	line-height: 30px;
+	font-size: 16px;
+	font-family: Helvetica, sans-serif;
+	border: black 2px solid;
+	border-radius: 15px;
+	margin: auto;
+	padding: 20px;
+}
+
+h1 {
+	width: 80%;
+	height: 80%;
+	background-color: rgb(255, 229, 180);
+	line-height: 30px;
+	font-family: Helvetica, sans-serif;
+	border: black 2px solid;
+	border-radius: 15px;
+	padding: 20px;
+	text-align: center;
+	margin: 20px auto 20px auto;
+}
+
+.inlineEl {
+	display: inline-block;
+	line-height: 35px;
+}
+
+.links {
+	margin: 20px 0px 20px 0px;
+}
+
+.page {
+	display: inline-block;
+	line-height: 35px;
+}

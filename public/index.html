@@ -7,11 +7,33 @@
     <script src="libs/jquery.js"></script>
     <script src="libs/handlebars.js"></script>
     <script src="libs/backbone.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
   </head>
   <body>
     
     <script src="index.js"></script>
+
+    <h1>Book that Chrome Thinks is in Norwegian</h2>
+
+    <div id="container" class="container">
+
+      <button id="populate">Test</button>
+      <button id="showTOC">showTOC</button>
+
+      
+
+      <script type="x-handlebars-template" id="page-template">
+        <div class="page">{{page}}</div>
+        <div class="inlineEl"><a href='#page/{{page}}'>{{title}}</a></div>
+      </script>
+
+      <script type="x-handlebars-template" id="link-template">
+        <div class="page">{{page}}</div>
+        <div class="inlineEl"><a href='#page/{{page}}'>{{sentence}}</a></div>
+      </script>
+
+    </div>
     
   </body>
 </html>

@@ -14,14 +14,15 @@
     
     <script src="index.js"></script>
 
+    <header>
+
     <h1>Book that Chrome Thinks is in Norwegian</h2>
 
-    <div id="container" class="container">
-
-      <button id="populate">Test</button>
-      <button id="showTOC">showTOC</button>
-
+      <a href="" class="center"><button id="toc">Table of Contents</button></a>
       
+    </header>
+
+    <div id="container" class="container">
 
       <script type="x-handlebars-template" id="page-toc-template">
         <div class="page">{{page}}</div>
@@ -36,6 +37,26 @@
         <div class="page"><a href='#page/{{this.pageLink}}'>{{this.pageLink}}</a></div>
         <div class="page">{{this.sentence}}</div>
         {{/each}}
+         <a href="#edit/{{page}}" class="edit"><button id="edit">Edit</button></a>
+      </script>
+
+       <script type="x-handlebars-template" id="edit-template">
+        <div class="page">{{page}}</div>
+
+        <div class="inlineEl">{{title}}</div>
+        Edit Title: <input type="text" id="editTitle"/>
+
+        <textarea id="editContent" class="page">{{content}}</textarea>
+
+        {{#each links}}
+        <div class="page">{{this.pageLink}}</div>
+        Edit Page Link: <input type="text" id="editLink{{this.pageLink}}"/>
+
+        <div class="page">{{this.sentence}}</div>
+        Edit Page Description: <input type="text" id="editSentence{{this.pageLink}}"/>
+        {{/each}}
+
+         <a href="#/edit/{{page}}" class="edit"><button id="edit">Edit</button></a>
       </script>
 
     </div>

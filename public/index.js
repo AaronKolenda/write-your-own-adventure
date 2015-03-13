@@ -43,61 +43,43 @@ var PageView = Backbone.View.extend({
 
 });
 
-
-
 var Router = Backbone.Router.extend({
 
   routes: {
     "": "displayIndex",
     "page/:pageNumber": "showPage",
+    "edit/:pageNumber": "editPage"
   },
 
   displayIndex: function(){
-  populateDataBase();
-  getInitialData(showTOC);
+    populateDataBase();
+    getInitialData(showTOC);
   },
 
-    showPage: function(page) {
-    $.ajax({
-      url: "/api/page/" + page,
-      method: "GET",
-      success: function(data) {
-        $("#container").html("");
-        console.log(data);
-        var dataModel = new PageModel({
-          page: data.page,
-          title: data.title,
-          content: data.content,
-          links: data.links
-        });
-        console.log(dataModel);
-        var page = new PageView(dataModel);
-        console.log(page);
-        $("#container").html(page.$el);
-/*
-        _.each(data.paragraphs, function(element, index){
-        $("#tocContainer").append(element);
+  getSpecificPage: function(page) {
+    var pageNum = Number(page);
+      var dataModel = _.find(pageCollecion.models, function(mod){
+        if (mod.get('page') === pageNum) {
+          return true;
+        }
       });
+      return dataModel;
+  },
 
-       _.each(data.links, function(element, index){
-          element = new LinkModel({
-            page: element.page,
-            sentence: element.sentence
-          });
-          linkViews.push(new LinkView(element));
-        });
+  showPage: function(page) {
+    var dataModel = this.getSpecificPage(page);
+    var page = new PageView(dataModel);
+    $("#container").html(page.$el);
+  },
 
-
-        _.each(linkViews, function(element, index){
-        $("#tocContainer").append(linkViews[index].el);
-      });
-*/
-
-      },
-    })
+  editPage: function(page) {
+    var dataModel = this.getSpecificPage(page);
+    var pageEdit = new EditView(dataModel);
+    $("#container").html(pageEdit.$el);
   }
 
-});/*
+});
+/*
       success: function(data) {
         console.log(data);
     }
@@ -158,13 +140,28 @@ var getTemplates = function(){
 	var pageTOCString = $("#page-toc-template").text()
   templates.pageTOCInfo = Handlebars.compile(pageTOCString);
 
-
   var pageString = $("#page-template").text()
   templates.pageInfo = Handlebars.compile(pageString);
 
+  var editString = $("#edit-template").text()
+  templates.editInfo = Handlebars.compile(editString);
+
 };
 
+var EditView =  Backbone.View.extend({
 
+  tagName: "div",
+
+  initialize: function(model) {
+    this.model = model;
+    this.render();
+  },
+
+  render: function() {
+    this.$el.html(templates.editInfo(this.model.viewDetails()));
+  },
+
+});
 
 var PageTOCView = Backbone.View.extend({
 

@@ -2,8 +2,22 @@ a {
 	text-decoration: none;
 }
 
+a button:hover{
+     background: rgb(225, 188, 100) ;
+}
+
 body {
 	background-color: rgb(74, 42, 3);
+}
+
+button {
+  color: rgb(74, 42, 3);
+  background-color: rgb(230, 190, 138);
+  border-color: rgb(224, 185, 116);
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 15px;
 }
 
 .container {
@@ -25,7 +39,7 @@ body {
 	text-align: center;
 }
 
-h1 {
+header {
 	width: 80%;
 	height: 80%;
 	background-color: rgb(255, 229, 180);
@@ -43,6 +57,17 @@ h1 {
 	line-height: 35px;
 }
 
+input {
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #555555;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
 .links {
 	margin: 20px 0px 20px 0px;
 }
@@ -50,4 +75,36 @@ h1 {
 .page {
 	display: inline-block;
 	line-height: 35px;
+}
+
+.row {
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+textarea {
+	height: 200px;
+	width: 40%;
+	text-align: left;
+	line-height: 20px;
+	font-size: 20px;
+	margin: auto;
+}
+
+.cell {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.columns2 {
+	width: 40%;
+}
+
+.columns3 {
+	width: 28%;
+}
+
+.columns4 {
+	width: 19%
 }

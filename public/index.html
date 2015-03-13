@@ -41,22 +41,38 @@
       </script>
 
        <script type="x-handlebars-template" id="edit-template">
-        <div class="page">{{page}}</div>
+        <div class="row center">
+          <div class="cell columns2">Page: {{page}}</div>
+          <div class="cell columns2">Title: {{title}}</div>
+        </div>
 
-        <div class="inlineEl">{{title}}</div>
-        Edit Title: <input type="text" id="editTitle"/>
+        <div class="row center">Edit Title: <input type="text" id="editTitle"/></div>
 
-        <textarea id="editContent" class="page">{{content}}</textarea>
+        <textarea id="editContent" class="row">{{content}}</textarea>
 
         {{#each links}}
-        <div class="page">{{this.pageLink}}</div>
-        Edit Page Link: <input type="text" id="editLink{{this.pageLink}}"/>
+        <div class="row center">
+          <div class="cell columns2">Currently Linking to: {{this.pageLink}}</div>
+          <div class="cell columns2">
+            Link to Page: <input type="text" id="editLink{{this.pageLink}}"/>
+          </div>
+        </div>
 
-        <div class="page">{{this.sentence}}</div>
-        Edit Page Description: <input type="text" id="editSentence{{this.pageLink}}"/>
+        <div class="row center">
+          <div class="cell columns2">Link Text: {{this.sentence}}</div>
+          <div class="cell columns2">
+            Edit Link Text: <input type="text" id="editSentence{{this.pageLink}}"/>
+          </div>
+        </div>
         {{/each}}
 
-         <a href="#/edit/{{page}}" class="edit"><button id="edit">Edit</button></a>
+        <div class="row center">
+         <a href="#save/{{page}}" class="cell columns3"><button id="save">Save</button></a>
+         <a href='#page/{{page}}' class="cell columns3"><button>Cancel</button></a>
+         <a href='#page/{{page}}' class="cell columns3">
+          <button class="delete">Delete this Page</button>
+         </a>
+        </div>
       </script>
 
     </div>

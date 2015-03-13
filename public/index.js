@@ -1,19 +1,16 @@
 var templates = {};
 var tocViews = [];
 var linkViews = [];
-var pageViews = [];
+var pageTOCViews = [];
 
 var PageModel = Backbone.Model.extend({
 
-	defaults: {
-	    page: 0,
-	    title: "",
-	    content: "",
-	    links: {
-		    pageLink: 0,
-		    sentence: ""
-		}
-  	},
+  defaults: {
+      page: 0,
+      title: "",
+      content: "",
+      links: []
+    },
 
   viewDetails: function() {
     var details = this.toJSON();
@@ -51,14 +48,54 @@ var PageView = Backbone.View.extend({
 var Router = Backbone.Router.extend({
 
   routes: {
-    "": "showTOC",
+    "": "displayIndex",
     "page/:pageNumber": "showPage",
   },
 
-  showTOC: function() {
-	  
+  displayIndex: function(){
+  populateDataBase();
+  getInitialData(showTOC);
+  },
 
-	}
+    showPage: function(page) {
+    $.ajax({
+      url: "/api/page/" + page,
+      method: "GET",
+      success: function(data) {
+        $("#container").html("");
+        console.log(data);
+        var dataModel = new PageModel({
+          page: data.page,
+          title: data.title,
+          content: data.content,
+          links: data.links
+        });
+        console.log(dataModel);
+        var page = new PageView(dataModel);
+        console.log(page);
+        $("#container").html(page.$el);
+/*
+        _.each(data.paragraphs, function(element, index){
+        $("#tocContainer").append(element);
+      });
+
+       _.each(data.links, function(element, index){
+          element = new LinkModel({
+            page: element.page,
+            sentence: element.sentence
+          });
+          linkViews.push(new LinkView(element));
+        });
+
+
+        _.each(linkViews, function(element, index){
+        $("#tocContainer").append(linkViews[index].el);
+      });
+*/
+
+      },
+    })
+  }
 
 });/*
       success: function(data) {
@@ -82,13 +119,13 @@ var Router = Backbone.Router.extend({
     })
   },
 
-  showPage: function(page) {
+  showPage: function() {
     $.ajax({
       url: "/api/page/" + page,
       method: "GET",
       success: function(data) {
-      	$("#tocContainer").html("");
-      	linkViews = [];
+      	$("#container").html("");
+      	pageViews = [];
         console.log(data);
 
         _.each(data.paragraphs, function(element, index){
@@ -114,51 +151,20 @@ var Router = Backbone.Router.extend({
   },
 
 });
+  
+*/
+var getTemplates = function(){
 
-var LinkModel = Backbone.Model.extend({
+	var pageTOCString = $("#page-toc-template").text()
+  templates.pageTOCInfo = Handlebars.compile(pageTOCString);
 
-	defaults: {
-    page: 0,
-    sentence: ""
-  	},
 
-  viewDetails: function() {
-    var details = this.toJSON();
-    return details;
-  },
+  var pageString = $("#page-template").text()
+  templates.pageInfo = Handlebars.compile(pageString);
 
-});
+};
 
-var LinkView = Backbone.View.extend({
 
-  tagName: "div",
-
-  className: "links",
-
-  initialize: function(model) {
-  	this.model = model;
-    this.render();
-  },
-
-  render: function() {
-    this.$el.html(templates.linkInfo(this.model.viewDetails()));
-  },
-
-});
-
-var PageTOCModel = Backbone.Model.extend({
-
-	defaults: {
-    page: 0,
-    title: ""
-  	},
-
-  viewDetails: function() {
-    var details = this.toJSON();
-    return details;
-  },
-
-});
 
 var PageTOCView = Backbone.View.extend({
 
@@ -170,58 +176,11 @@ var PageTOCView = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.html(templates.tocInfo(this.model.viewDetails()));
-  },
-
-});
-*/
-var getTemplates = function(){
-
-	var pageString = $("#page-template").text()
-  	templates.pageInfo = Handlebars.compile(pageString);
-
-
-  /*var tocString = $("#toc-template").text()
-  templates.tocInfo = Handlebars.compile(tocString);
-
-  var linkString = $("#link-template").text()
-  templates.linkInfo = Handlebars.compile(linkString);*/
-
-};
-
-var PageModel = Backbone.Model.extend({
-
-	defaults: {
-	    page: 0,
-	    title: "",
-	    content: "",
-	    links: {
-		    pageLink: 0,
-		    sentence: ""
-		}
-  	},
-
-  viewDetails: function() {
-    var details = this.toJSON();
-    return details;
+    this.$el.html(templates.pageTOCInfo(this.model.viewDetails()));
   },
 
 });
 
-var PageView = Backbone.View.extend({
-
-  tagName: "div",
-
-  initialize: function(model) {
-  	this.model = model;
-    this.render();
-  },
-
-  render: function() {
-    this.$el.html(templates.pageInfo(this.model.viewDetails()));
-  },
-
-});
 var pageCollecion = new PageCollection;
 var router = new Router;
 
@@ -229,33 +188,45 @@ var populateDataBase = function() {
 	
 
 	var testModel = new PageModel({
-				    page: 5,
+				    page: 1,
 				    title: "One",
 				    content: "first test model",
-				    links: {
+				    links: [{
 					    pageLink: 4,
 					    sentence: "yep"
-					}
+					    },
+              {
+              pageLink: 6,
+              sentence: "second link"
+            }]
 		  		  });
 
 	var testModel2 = new PageModel({
-				    page: 5,
+				    page: 2,
 				    title: "Two",
 				    content: "second test model",
-				    links: {
-					    pageLink: 4,
-					    sentence: "yep"
-					}
+				    links: [{
+              pageLink: 4,
+              sentence: "yep"
+              },
+              {
+              pageLink: 6,
+              sentence: "second link"
+            }]
 		  		  });
 
 	var testModel3 = new PageModel({
-				    page: 5,
+				    page: 3,
 				    title: "Three",
 				    content: "third test model",
-				    links: {
-					    pageLink: 4,
-					    sentence: "yep"
-					}
+				    links: [{
+              pageLink: 4,
+              sentence: "yep"
+              },
+              {
+              pageLink: 6,
+              sentence: "second link"
+            }]
 		  		  });
 
 		    	pageCollecion.create(testModel);
@@ -266,23 +237,27 @@ var populateDataBase = function() {
 
 var getInitialData = function(callback) {
 
-	  			pageCollecion.fetch({
-			    	success: function(data) {
-			    		console.log(pageCollecion)
-			    		callback();
-			    	},
-		    	})	   
+	pageCollecion.fetch({
+  	success: function(data) {
+  		console.log(pageCollecion)
+  		callback();
+  	},
+	})	   
 }
 
 var showTOC = function() {
-		    	_.each(pageCollecion.models, function(element){	
-	  				pageViews.push(new PageView(element));
-	  			})
+  $("#container").html("");
 
-	  			_.each(pageViews, function(element){
-	  				$("#container").append(element.$el);
-	  			})
+	_.each(pageCollecion.models, function(element){	
+		pageTOCViews.push(new PageTOCView(element));
+	})
+
+	_.each(pageTOCViews, function(element){
+		$("#container").append(element.$el);
+	})
 }
+
+
 
 
 

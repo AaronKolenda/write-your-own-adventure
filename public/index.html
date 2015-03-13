@@ -23,14 +23,19 @@
 
       
 
-      <script type="x-handlebars-template" id="page-template">
+      <script type="x-handlebars-template" id="page-toc-template">
         <div class="page">{{page}}</div>
         <div class="inlineEl"><a href='#page/{{page}}'>{{title}}</a></div>
       </script>
 
-      <script type="x-handlebars-template" id="link-template">
+      <script type="x-handlebars-template" id="page-template">
         <div class="page">{{page}}</div>
-        <div class="inlineEl"><a href='#page/{{page}}'>{{sentence}}</a></div>
+        <div class="inlineEl">{{title}}</div>
+        <div class="page">{{content}}</div>
+        {{#each links}}
+        <div class="page"><a href='#page/{{this.pageLink}}'>{{this.pageLink}}</a></div>
+        <div class="page">{{this.sentence}}</div>
+        {{/each}}
       </script>
 
     </div>

@@ -30,14 +30,22 @@
       </script>
 
       <script type="x-handlebars-template" id="page-template">
-        <div class="page">{{page}}</div>
-        <div class="inlineEl">{{title}}</div>
-        <div class="page">{{content}}</div>
+         <div class="row center">
+          <div class="cell columns2">Page: {{page}}</div>
+          <div class="cell columns2">Title: {{title}}</div>
+        </div>
+        <div class="row">
+          {{content}}
+        </div>
         {{#each links}}
-        <div class="page"><a href='#page/{{this.pageLink}}'>{{this.pageLink}}</a></div>
-        <div class="page">{{this.sentence}}</div>
+        <div class="row center">
+          <div class="cell columns2">
+            <a href='#page/{{this.pageLink}}'>{{this.pageLink}}</a>
+          </div>
+          <div class="cell columns2">{{this.sentence}}</div>
+        </div>
         {{/each}}
-         <a href="#edit/{{page}}" class="edit"><button id="edit">Edit</button></a>
+         <a href="#edit/{{page}}" class="row center"><button id="edit">Edit</button></a>
       </script>
 
        <script type="x-handlebars-template" id="edit-template">

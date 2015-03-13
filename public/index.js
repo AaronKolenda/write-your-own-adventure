@@ -48,7 +48,8 @@ var Router = Backbone.Router.extend({
   routes: {
     "": "displayIndex",
     "page/:pageNumber": "showPage",
-    "edit/:pageNumber": "editPage"
+    "edit/:pageNumber": "editPage",
+    "save/:pageNumber": "savePage"
   },
 
   displayIndex: function(){
@@ -76,6 +77,26 @@ var Router = Backbone.Router.extend({
     var dataModel = this.getSpecificPage(page);
     var pageEdit = new EditView(dataModel);
     $("#container").html(pageEdit.$el);
+  },
+
+  savePage: function(page) {
+    var dataModel = this.getSpecificPage(page);
+
+    var newTitle = $("#editTitle").val();
+    var newContent = $("#editContent").val();
+    var linksArray = dataModel.get('links');
+
+    _.each(linksArray, function(element){
+      element.sentence = $("#editSentence" + element.pageLink).val();
+      element.pageLink = $("#editLink" + element.pageLink).val();
+    });
+
+    dataModel.set('links', linksArray);
+    dataModel.set('title', newTitle);
+    dataModel.set('content', newContent);
+
+    console.log(dataModel);
+
   }
 
 });

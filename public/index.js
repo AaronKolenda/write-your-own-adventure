@@ -229,24 +229,28 @@ var AddView =  Backbone.View.extend({
   },
 
   addPage: function() {
-    var newTitle = $("#additle").val();
+    var newTitle = $("#addtitle").val();
     var newContent = $("#addContent").val();
     var linksArray = this.model.get('links');
 
-    _.each(linksArray, function(element){
-      element.sentence = $("#editSentence" + counter).val();
-      element.pageLink = $("#editLink" + counter).val();
-    });
+    var i = 1;
+    while (i < counter){
+      var obj = {};
+      obj.sentence = $("#addSentence" + i).val();
+      obj.pageLink = $("#addLink" + i).val();
+      linksArray.push(obj);
+      i++;
+    }
 
     this.model.set('links', linksArray);
     this.model.set('title', newTitle);
     this.model.set('content', newContent);
 
     console.log(this.model);
-    this.model.save({}, {
+    /*this.model.save({}, {
       success: function(data) {redirect()}
     }
-    );
+    );*/
   },
 
   addLink: function() {

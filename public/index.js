@@ -49,7 +49,6 @@ var Router = Backbone.Router.extend({
     "": "displayIndex",
     "page/:pageNumber": "showPage",
     "edit/:pageNumber": "editPage",
-    "save/:pageNumber": "savePage"
   },
 
   displayIndex: function(){
@@ -79,27 +78,11 @@ var Router = Backbone.Router.extend({
     $("#container").html(pageEdit.$el);
   },
 
-  savePage: function(page) {
-    var dataModel = this.getSpecificPage(page);
-
-    var newTitle = $("#editTitle").val();
-    var newContent = $("#editContent").val();
-    var linksArray = dataModel.get('links');
-
-    _.each(linksArray, function(element){
-      element.sentence = $("#editSentence" + element.pageLink).val();
-      element.pageLink = $("#editLink" + element.pageLink).val();
-    });
-
-    dataModel.set('links', linksArray);
-    dataModel.set('title', newTitle);
-    dataModel.set('content', newContent);
-
-    console.log(dataModel);
-
-  }
-
 });
+var redirect = function(data) {router.navigate("", { trigger: true })}
+
+
+
 /*
       success: function(data) {
         console.log(data);
@@ -171,6 +154,10 @@ var getTemplates = function(){
 
 var EditView =  Backbone.View.extend({
 
+  events: {
+    "click .save": "savePage"
+  },
+
   tagName: "div",
 
   initialize: function(model) {
@@ -182,6 +169,32 @@ var EditView =  Backbone.View.extend({
     this.$el.html(templates.editInfo(this.model.viewDetails()));
   },
 
+  savePage: function() {
+    //console.log(this);
+    var dataModel = router.getSpecificPage(this.model.get('page'));
+    console.log(dataModel);
+
+    var newTitle = $("#editTitle").val();
+    var newContent = $("#editContent").val();
+    var linksArray = dataModel.get('links');
+
+    _.each(linksArray, function(element){
+      element.sentence = $("#editSentence" + element.pageLink).val();
+      element.pageLink = $("#editLink" + element.pageLink).val();
+    });
+
+    dataModel.set('links', linksArray);
+    dataModel.set('title', newTitle);
+    dataModel.set('content', newContent);
+
+    console.log(dataModel);
+    dataModel.save({}, {
+      success: function(data) {redirect()}
+    }
+    );
+    //router.navigate("", { trigger: true })
+    //dataModel.save().then(redirect())
+}
 });
 
 var PageTOCView = Backbone.View.extend({
@@ -274,10 +287,6 @@ var showTOC = function() {
 		$("#container").append(element.$el);
 	})
 }
-
-
-
-
 
 $(document).ready(function() {
 	Backbone.history.start();

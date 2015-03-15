@@ -49,6 +49,7 @@ var Router = Backbone.Router.extend({
     "": "displayIndex",
     "page/:pageNumber": "showPage",
     "edit/:pageNumber": "editPage",
+    "add": "addPage"
   },
 
   displayIndex: function(){
@@ -77,6 +78,19 @@ var Router = Backbone.Router.extend({
     var pageEdit = new EditView(dataModel);
     $("#container").html(pageEdit.$el);
   },
+
+  addPage: function() {
+    var dataModel = new PageModel({
+      page: 0,
+      title: "",
+      content: "",
+      links: []
+    })
+
+     var newPageView = new AddView(dataModel);
+     $("#container").html(newPageView.$el);
+  }
+
 
 });
 var redirect = function(data) {router.navigate("", { trigger: true })}
@@ -150,6 +164,9 @@ var getTemplates = function(){
   var editString = $("#edit-template").text()
   templates.editInfo = Handlebars.compile(editString);
 
+  var addString = $("#add-template").text()
+  templates.addInfo = Handlebars.compile(addString);
+
 };
 
 var EditView =  Backbone.View.extend({
@@ -170,25 +187,21 @@ var EditView =  Backbone.View.extend({
   },
 
   savePage: function() {
-    //console.log(this);
-    var dataModel = router.getSpecificPage(this.model.get('page'));
-    console.log(dataModel);
-
     var newTitle = $("#editTitle").val();
     var newContent = $("#editContent").val();
-    var linksArray = dataModel.get('links');
+    var linksArray = this.model.get('links');
 
     _.each(linksArray, function(element){
       element.sentence = $("#editSentence" + element.pageLink).val();
       element.pageLink = $("#editLink" + element.pageLink).val();
     });
 
-    dataModel.set('links', linksArray);
-    dataModel.set('title', newTitle);
-    dataModel.set('content', newContent);
+    this.model.set('links', linksArray);
+    this.model.set('title', newTitle);
+    this.model.set('content', newContent);
 
-    console.log(dataModel);
-    dataModel.save({}, {
+    console.log(this.model);
+    this.model.save({}, {
       success: function(data) {redirect()}
     }
     );
@@ -196,6 +209,55 @@ var EditView =  Backbone.View.extend({
     //dataModel.save().then(redirect())
 }
 });
+
+var AddView =  Backbone.View.extend({
+
+  events: {
+    "click .create": "addPage",
+     "click .addLink": "addLink"
+  },
+
+  tagName: "div",
+
+  initialize: function(model) {
+    this.model = model;
+    this.render();
+  },
+
+  render: function() {
+    this.$el.html(templates.addInfo(this.model.viewDetails()));
+  },
+
+  addPage: function() {
+    var newTitle = $("#additle").val();
+    var newContent = $("#addContent").val();
+    var linksArray = this.model.get('links');
+
+    _.each(linksArray, function(element){
+      element.sentence = $("#editSentence" + counter).val();
+      element.pageLink = $("#editLink" + counter).val();
+    });
+
+    this.model.set('links', linksArray);
+    this.model.set('title', newTitle);
+    this.model.set('content', newContent);
+
+    console.log(this.model);
+    this.model.save({}, {
+      success: function(data) {redirect()}
+    }
+    );
+  },
+
+  addLink: function() {
+    var htmlString = ('<div class="row center"><div class="cell columns2">Link to Page: <input type="text" id="addLink' + counter + '"/></div><div class="cell columns2">Link Text: <input type="text" id="addSentence' + counter + '"/></div></div>');
+        $("#linkWrap").append(htmlString);
+        counter++;
+  }
+
+});
+
+var counter = 2;
 
 var PageTOCView = Backbone.View.extend({
 

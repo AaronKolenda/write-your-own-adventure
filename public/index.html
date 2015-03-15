@@ -18,8 +18,11 @@
 
     <h1>Book that Chrome Thinks is in Norwegian</h2>
 
-      <a href="" class="center"><button id="toc">Table of Contents</button></a>
-      
+      <div class="row center">
+        <a href="" class="cell columns2"><button id="toc">Table of Contents</button></a>
+        <a href="#add" class="cell columns2"><button id="add">Add Page</button></a>
+      </div>
+
     </header>
 
     <div id="container" class="container">
@@ -80,6 +83,34 @@
          <a href='#page/{{page}}' class="cell columns3">
           <button class="delete">Delete this Page</button>
          </a>
+        </div>
+      </script>
+
+      <script type="x-handlebars-template" id="add-template">
+        <div class="row center">Page: {{page}}</div>
+
+        <div class="row center">Title: <input type="text" id="addTitle"/></div>
+
+        <textarea id="addContent" class="row">{{content}}</textarea>
+
+        <div class="row center">
+         <button class="addLink">Add Link</button>
+        </div>
+
+        <div id="linkWrap">
+          <div class="row center">
+            <div class="cell columns2">
+              Link to Page: <input type="text" id="addLink1"/>
+            </div>
+            <div class="cell columns2">
+              Link Text: <input type="text" id="addSentence1"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="row center">
+         <button class="create">Add Page</button>
+         <a href="" class="cell columns2"><button>Cancel</button></a>
         </div>
       </script>
 

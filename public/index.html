@@ -57,24 +57,24 @@
           <div class="cell columns2">Title: {{title}}</div>
         </div>
 
-        <div class="row center">Edit Title: <input type="text" id="editTitle"/></div>
+        <div class="row center">Edit Title: <input type="text" id="editTitle" value="{{title}}"/></div>
 
         <textarea id="editContent" class="row">{{content}}</textarea>
 
         {{#each links}}
-        <div class="row center">
-          <div class="cell columns2">Currently Linking to: {{this.pageLink}}</div>
-          <div class="cell columns2">
-            Link to Page: <input type="text" id="editLink{{this.pageLink}}"/>
+          <div class="row center">
+            <div class="cell columns2">Currently Linking to: {{this.pageLink}}</div>
+            <div class="cell columns2">
+              Link to Page: <input type="text" id="editLink{{this.pageLink}}" value="{{this.pageLink}}"/>
+            </div>
           </div>
-        </div>
 
-        <div class="row center">
-          <div class="cell columns2">Link Text: {{this.sentence}}</div>
-          <div class="cell columns2">
-            Edit Link Text: <input type="text" id="editSentence{{this.pageLink}}"/>
+          <div class="row center">
+            <div class="cell columns2">Link Text: {{this.sentence}}</div>
+            <div class="cell columns2">
+              Edit Link Text: <input type="text" id="editSentence{{this.pageLink}}" value="{{this.sentence}}"/>
+            </div>
           </div>
-        </div>
         {{/each}}
 
         <div class="row center">

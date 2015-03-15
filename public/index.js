@@ -1,7 +1,7 @@
 var templates = {};
 var tocViews = [];
-var linkViews = [];
 var pageTOCViews = [];
+var page;
 
 var PageModel = Backbone.Model.extend({
 
@@ -49,11 +49,10 @@ var Router = Backbone.Router.extend({
     "": "displayIndex",
     "page/:pageNumber": "showPage",
     "edit/:pageNumber": "editPage",
-    "add": "addPage"
+    "add": "addPageRoute"
   },
 
   displayIndex: function(){
-    populateDataBase();
     getInitialData(showTOC);
   },
 
@@ -69,7 +68,7 @@ var Router = Backbone.Router.extend({
 
   showPage: function(page) {
     var dataModel = this.getSpecificPage(page);
-    var page = new PageView(dataModel);
+    page = new PageView(dataModel);
     $("#container").html(page.$el);
   },
 
@@ -79,80 +78,23 @@ var Router = Backbone.Router.extend({
     $("#container").html(pageEdit.$el);
   },
 
-  addPage: function() {
+  addPageRoute: function() {
     var dataModel = new PageModel({
-      page: 0,
+      page: pageCollecion.length + 1,
       title: "",
       content: "",
       links: []
-    })
-
-     var newPageView = new AddView(dataModel);
-     $("#container").html(newPageView.$el);
+    });
+   var newPageView = new AddView(dataModel);
+   pageCollecion.add(dataModel);
+   $("#container").html(newPageView.$el);
   }
 
 
 });
-var redirect = function(data) {router.navigate("", { trigger: true })}
 
+var redirectTOC = function() {router.navigate("", { trigger: true })}
 
-
-/*
-      success: function(data) {
-        console.log(data);
-    }
-
-        _.each(data, function(element, index){
-        	element = new PageTOCModel({
-        		page: element.page,
-        		title: element.title
-        	});
-        	tocViews.push(new PageTOCView(element));
-
-        });
-
-       _.each(tocViews, function(element, index){
-    		$("#tocContainer").append(tocViews[index].el);
-    	});
-
-      },
-    })
-  },
-
-  showPage: function() {
-    $.ajax({
-      url: "/api/page/" + page,
-      method: "GET",
-      success: function(data) {
-      	$("#container").html("");
-      	pageViews = [];
-        console.log(data);
-
-        _.each(data.paragraphs, function(element, index){
-    		$("#tocContainer").append(element);
-    	});
-
-    	 _.each(data.links, function(element, index){
-        	element = new LinkModel({
-        		page: element.page,
-        		sentence: element.sentence
-        	});
-        	linkViews.push(new LinkView(element));
-        });
-
-
-    	  _.each(linkViews, function(element, index){
-    		$("#tocContainer").append(linkViews[index].el);
-    	});
-
-
-      },
-    })
-  },
-
-});
-  
-*/
 var getTemplates = function(){
 
 	var pageTOCString = $("#page-toc-template").text()
@@ -172,7 +114,9 @@ var getTemplates = function(){
 var EditView =  Backbone.View.extend({
 
   events: {
-    "click .save": "savePage"
+    "click .save": "savePage",
+    "click .delete": "deletePage",
+    "click .addLink": "addLink"
   },
 
   tagName: "div",
@@ -196,18 +140,31 @@ var EditView =  Backbone.View.extend({
       element.pageLink = $("#editLink" + element.pageLink).val();
     });
 
-    this.model.set('links', linksArray);
+    var newLinkArray = _.filter(linksArray, function(element){
+      if (element.sentence !== "" || element.pageLink !== "") {
+        return true;
+      }
+    });
+     this.model.set('links', newLinkArray);
+                    
     this.model.set('title', newTitle);
     this.model.set('content', newContent);
 
     console.log(this.model);
     this.model.save({}, {
-      success: function(data) {redirect()}
+      success: function(data) {redirectTOC()}
     }
     );
-    //router.navigate("", { trigger: true })
-    //dataModel.save().then(redirect())
-}
+
+  },
+
+  deletePage: function() {
+    page = "";
+    this.model.destroy({
+      success: function(data) {redirectTOC()}
+    });
+  },
+
 });
 
 var AddView =  Backbone.View.extend({
@@ -229,7 +186,7 @@ var AddView =  Backbone.View.extend({
   },
 
   addPage: function() {
-    var newTitle = $("#addtitle").val();
+    var newTitle = $("#addTitle").val();
     var newContent = $("#addContent").val();
     var linksArray = this.model.get('links');
 
@@ -247,10 +204,10 @@ var AddView =  Backbone.View.extend({
     this.model.set('content', newContent);
 
     console.log(this.model);
-    /*this.model.save({}, {
-      success: function(data) {redirect()}
-    }
-    );*/
+    this.model.save({}, {
+      success: function(data) {redirectTOC()}
+    });
+
   },
 
   addLink: function() {
@@ -281,57 +238,6 @@ var PageTOCView = Backbone.View.extend({
 var pageCollecion = new PageCollection;
 var router = new Router;
 
-var populateDataBase = function() {
-	
-
-	var testModel = new PageModel({
-				    page: 1,
-				    title: "One",
-				    content: "first test model",
-				    links: [{
-					    pageLink: 4,
-					    sentence: "yep"
-					    },
-              {
-              pageLink: 6,
-              sentence: "second link"
-            }]
-		  		  });
-
-	var testModel2 = new PageModel({
-				    page: 2,
-				    title: "Two",
-				    content: "second test model",
-				    links: [{
-              pageLink: 4,
-              sentence: "yep"
-              },
-              {
-              pageLink: 6,
-              sentence: "second link"
-            }]
-		  		  });
-
-	var testModel3 = new PageModel({
-				    page: 3,
-				    title: "Three",
-				    content: "third test model",
-				    links: [{
-              pageLink: 4,
-              sentence: "yep"
-              },
-              {
-              pageLink: 6,
-              sentence: "second link"
-            }]
-		  		  });
-
-		    	pageCollecion.create(testModel);
-		    	pageCollecion.create(testModel2);
-		    	pageCollecion.create(testModel3);
-		    	console.log(pageCollecion);
-}
-
 var getInitialData = function(callback) {
 
 	pageCollecion.fetch({
@@ -344,7 +250,8 @@ var getInitialData = function(callback) {
 
 var showTOC = function() {
   $("#container").html("");
-
+  pageTOCViews = [];
+  console.log("in showTOC");
 	_.each(pageCollecion.models, function(element){	
 		pageTOCViews.push(new PageTOCView(element));
 	})
@@ -357,16 +264,4 @@ var showTOC = function() {
 $(document).ready(function() {
 	Backbone.history.start();
 	getTemplates();
-
-	$("#populate").click(function() {
-		populateDataBase();
-	})
-
-	$("#showTOC").click(function() {
-		getInitialData(showTOC);
-
-	})
-
-   
-
 });

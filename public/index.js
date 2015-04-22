@@ -1,3 +1,5 @@
+// Declare all the global variables
+
 var templates = {};
 var tocViews = [];
 var pageTOCViews = [];
@@ -111,6 +113,8 @@ var getTemplates = function(){
 
 };
 
+// For editing a page
+
 var EditView =  Backbone.View.extend({
 
   events: {
@@ -158,6 +162,9 @@ var EditView =  Backbone.View.extend({
 
   },
 
+  // Something to add here would be shifting the other page numbers down once a page has been deleted
+  // Right now if page 2 gets deleted, then 3 becomes 2, so adding a new page creates another page 3.
+
   deletePage: function() {
     page = "";
     this.model.destroy({
@@ -166,6 +173,8 @@ var EditView =  Backbone.View.extend({
   },
 
 });
+
+// For adding a new page
 
 var AddView =  Backbone.View.extend({
 
@@ -210,6 +219,8 @@ var AddView =  Backbone.View.extend({
 
   },
 
+  // For adding additional links to each page
+
   addLink: function() {
     var htmlString = ('<div class="row center"><div class="cell columns2">Link to Page: <input type="text" id="addLink' + counter + '"/></div><div class="cell columns2">Link Text: <input type="text" id="addSentence' + counter + '"/></div></div>');
         $("#linkWrap").append(htmlString);
@@ -219,6 +230,8 @@ var AddView =  Backbone.View.extend({
 });
 
 var counter = 2;
+
+// a View of each page on the Table of Contents
 
 var PageTOCView = Backbone.View.extend({
 
